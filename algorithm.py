@@ -23,7 +23,7 @@ def tone_map(HDR_object):
 
 def save_result(HDR_result):
     result_image = np.clip(HDR_result * 255, 0, 255).astype('uint8')
-    cv.imwrite("./Test Images/1/consistent/Result.jpg", result_image)
+    cv.imwrite("./Test Images/2/Inconsistent/Result.jpg", result_image)
 
 def graph_camera_response_function(images, times):
     calibration = cv.createCalibrateDebevec()
@@ -31,16 +31,16 @@ def graph_camera_response_function(images, times):
     return crf_debevec
 
 if __name__ == "__main__":
-    time = np.array([1.0/1304.0, 1.0/90.0, 1.0/3.0, 3], dtype=np.float32)
-    paths = ["./Test Images/1/consistent/1.jpg",
-             "./Test Images/1/consistent/2.jpg",
-             "./Test Images/1/consistent/3.jpg",
-             "./Test Images/1/consistent/4.jpg"]
+    time = np.array([1.0/8000.0, 1.0/1020.0, 1.0/100, 1.0/15.0], dtype=np.float32)
+    paths = ["./Test Images/2/Inconsistent/1.jpg",
+             "./Test Images/2/Inconsistent/2.jpg",
+             "./Test Images/2/Inconsistent/3.jpg",
+             "./Test Images/2/Inconsistent/4.jpg"]
     images = readImagesAndTimes(paths)
     merge_mertens = cv.createMergeMertens()
     fusion = merge_mertens.process(images)
     fusion_8bit = np.clip(fusion * 255, 0, 255).astype('uint8')
-    cv.imwrite("./Test Images/1/consistent/fusion_result.png", fusion_8bit)
+    cv.imwrite("./Test Images/2/Inconsistent/fusion_result.png", fusion_8bit)
     hdr_merge = tone_merge(images, time)
     mapping = tone_map(hdr_merge)
     save_result(mapping)
@@ -51,5 +51,5 @@ if __name__ == "__main__":
     plt.plot(x_value, vectors[:, :, 2], label='R', color='r')
     plt.legend()
     plt.title("Estimated camera response function")
-    plt.savefig('./Test Images/1/consistent/CRF.png')
+    plt.savefig('./Test Images/2/Inconsistent/CRF.png')
     plt.show()
