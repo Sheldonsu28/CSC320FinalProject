@@ -31,27 +31,27 @@ def graph_camera_response_function(images, times):
     return crf_debevec
 
 if __name__ == "__main__":
-    time = np.array([1.0/8000.0, 1.0/1020.0, 1.0/100.0, 1.0/20.0], dtype=np.float32)
-    paths = ["./Test Images/2/Inconsistent/1.jpg",
-             "./Test Images/2/Inconsistent/2.jpg",
-             "./Test Images/2/Inconsistent/3.jpg",
-             "./Test Images/2/Inconsistent/4.jpg"]
+    time = np.array([1.0/142.0, 1.0/91.0, 1.0/56.0, 1.0/30.0], dtype=np.float32)
+    paths = ["./Test Images/5/Inconsistent/1.jpeg",
+             "./Test Images/5/Inconsistent/2.jpeg",
+             "./Test Images/5/Inconsistent/3.jpeg",
+             "./Test Images/5/Inconsistent/4.jpeg"]
     images = readImagesAndTimes(paths)
     merge_mertens = cv.createMergeMertens()
     fusion = merge_mertens.process(images)
     fusion_8bit = np.clip(fusion * 255, 0, 255).astype('uint8')
-    cv.imwrite("./Test Images/2/Inconsistent/fusion_result.png", fusion_8bit)
+    cv.imwrite("./Test Images/5/Inconsistent/fusion_result.png", fusion_8bit)
     hdr_merge = tone_merge(images, time)
     mapping = tone_map(hdr_merge)
     save_result(mapping)
     x_value = [x for x in range(0, 256)]
     vectors = graph_camera_response_function(images, time)
-    plt.plot(x_value, vectors[:, :, 0], label='R', color='R')
+    plt.plot(x_value, vectors[:, :, 0], label='B', color='b')
     plt.plot(x_value, vectors[:, :, 1], label='G', color='g')
-    plt.plot(x_value, vectors[:, :, 2], label='B', color='b')
+    plt.plot(x_value, vectors[:, :, 2], label='R', color='r')
     plt.xlabel("pixel value intensity")
     plt.ylabel("Calibrated intensity")
     plt.legend()
-    plt.title("Estimated camera response function for inconsistent white balance")
-    plt.savefig('./Test Images/2/Inconsistent/CRF.png')
+    plt.title("Estimated camera response function for consistent white balance")
+    plt.savefig('./Test Images/5/Inconsistent/CRF.png')
     plt.show()
